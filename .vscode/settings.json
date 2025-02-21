@@ -1,12 +1,9 @@
 {
-  "eslint.workingDirectories": ["ui"],
+  "eslint.workingDirectories": [
+    "ui"
+  ],
   "explorer.autoReveal": "focusNoScroll",
-  "cSpell.words": ["grecaptcha"],
-  "i18n-ally.localesPaths": [
-    "i18n",
-    "ui/src/i18n",
-    "ui/src/plugins/builtin/SearchInfo/i18n",
-    "ui/src/plugins/builtin/ThirdPartyConnector/i18n",
-    "ui/src/plugins/builtin/HostingConnector/i18n"
+  "cSpell.words": [
+    "grecaptcha"
   ]
 }
