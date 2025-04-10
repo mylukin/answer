@@ -30,6 +30,7 @@ import {
   loginToContinueStore,
   pageTagStore,
   writeSettingStore,
+  siteLealStore,
 } from '@/stores';
 import { RouteAlias } from '@/router/alias';
 import {
@@ -411,6 +412,9 @@ export const initAppSettingsStore = async () => {
     writeSettingStore.getState().update({
       restrict_answer: appSettings.site_write.restrict_answer,
       ...appSettings.site_write,
+    });
+    siteLealStore.getState().update({
+      external_content_display: appSettings.site_legal.external_content_display,
     });
   }
 };

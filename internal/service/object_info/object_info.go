@@ -21,6 +21,7 @@ package object_info
 
 import (
 	"context"
+
 	"github.com/apache/answer/internal/base/constant"
 	"github.com/apache/answer/internal/base/reason"
 	"github.com/apache/answer/internal/schema"
@@ -279,7 +280,7 @@ func (os *ObjService) GetInfo(ctx context.Context, objectID string) (objInfo *sc
 			ObjectID:   tagInfo.ID,
 			TagID:      tagInfo.ID,
 			ObjectType: objectType,
-			Title:      tagInfo.ParsedText,
+			Title:      tagInfo.SlugName,
 			Content:    tagInfo.ParsedText, // todo trim
 		}
 	}

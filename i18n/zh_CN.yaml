@@ -137,6 +137,8 @@ backend:
     other: 密码
   pass:
     other: 密码
+  old_pass:
+    other: 当前密码
   original_text:
     other: 本帖
   email_or_password_wrong_error:
@@ -168,6 +170,8 @@ backend:
         other: 没有更新权限。
       question_closed_cannot_add:
         other: 问题已关闭，无法添加。
+      content_cannot_empty:
+        other: 回答内容不能为空。
     comment:
       edit_without_permission:
         other: 不允许编辑评论。
@@ -175,6 +179,8 @@ backend:
         other: 评论未找到。
       cannot_edit_after_deadline:
         other: 评论时间太久，无法修改。
+      content_cannot_empty:
+        other: 评论内容不能为空。
     email:
       duplicate:
         other: 邮箱已存在。
@@ -224,6 +230,8 @@ backend:
         other: 没有关闭权限。
       cannot_update:
         other: 没有更新权限。
+      content_cannot_empty:
+        other: 内容不能为空。
     rank:
       fail_to_meet_the_condition:
         other: 声望值未达到要求。
@@ -541,7 +549,7 @@ backend:
         name:
           other: 编辑者
         desc:
-          other: 首次帖子编辑。
+          other: 首次编辑帖子。
       first_flag:
         name:
           other: 第一次举报
@@ -571,7 +579,7 @@ backend:
         name:
           other: 学者
         desc:
-          other: 问了一个问题并接受了一个答案。
+          other: 提问了一个问题并接受了一个答案。
       commentator:
         name:
           other: 评论员
@@ -591,7 +599,7 @@ backend:
         name:
           other: 读者
         desc:
-          other: 用10个以上的答案在主题中阅读每个答案。
+          other: 阅读超过 10 个回答的主题中的每个回答。
       welcome:
         name:
           other: 欢迎
@@ -614,19 +622,19 @@ backend:
           other: 分享了一个拥有1000个唯一访客的帖子。
       out_of_love:
         name:
-          other: 失去爱好
+          other: 出于爱
         desc:
-          other: 一天内使用了50张选票。
+          other: 一天内使用了 50 个赞。
       higher_love:
         name:
           other: 更高的爱好
         desc:
-          other: 一天内使用了50张选票。
+          other: 一天内使用了 50 个赞 5 次。
       crazy_in_love:
         name:
           other: 爱情疯狂的
         desc:
-          other: 在 20 天内使用了50张选票。
+          other: 一天内使用了 50 个赞 20 次。
       promoter:
         name:
           other: 推荐人
@@ -646,17 +654,17 @@ backend:
         name:
           other: 谢谢
         desc:
-          other: 拥有20个投票赞成的职位并放弃了10个投票。
+          other: 有 20 个赞成票的帖子，并投了 10 个赞成票。
       gives_back:
         name:
           other: 返回
         desc:
-          other: 拥有100个投票赞成的职位并放弃了100个投票。
+          other: 有 100 个赞成票的帖子，并投了 100 个赞成票。
       empathetic:
         name:
           other: 情随境迁
         desc:
-          other: 拥有500个投票赞成的职位并放弃了1000个投票。
+          other: 有 500 个赞成票的帖子，并投了 1000 个赞成票。
       enthusiast:
         name:
           other: 狂热
@@ -701,17 +709,17 @@ backend:
         name:
           other: 指导顾问
         desc:
-          other: 接受答案。
+          other: 有10个答案被接受。
       know_it_all:
         name:
           other: 万事通
         desc:
-          other: 接受50个答案。
+          other: 有50个答案被接受。
       solution_institution:
         name:
           other: 解决方案机构
         desc:
-          other: 接受150份答复。
+          other: 有150个答案被接受。
       nice_answer:
         name:
           other: 好答案
@@ -746,17 +754,17 @@ backend:
         name:
           other: 热门问题
         desc:
-          other: 问题有500个意见。
+          other: 问题有 500 个浏览量。
       notable_question:
         name:
           other: 值得关注问题
         desc:
-          other: 1 000个问题。
+          other: 问题有1,000 个浏览量。
       famous_question:
         name:
           other: 著名的问题
         desc:
-          other: 问题有5,000个意见。
+          other: 问题有 5,000 个浏览量。
       popular_link:
         name:
           other: 热门链接
@@ -1465,8 +1473,15 @@ ui:
     normal: 正常
     closed: 已关闭
     deleted: 已删除
+    deleted_permanently: 永久删除
     pending: 等待处理
     more: 更多
+    view: 视图
+    card: 卡片模式
+    compact: 简洁模式
+    display_below: 展示当前
+    always_display: 一直展示
+    or: 或者
   search:
     title: 搜索结果
     keywords: 关键词
@@ -1496,10 +1511,13 @@ ui:
     via: 分享到...
     copied: 已复制
     facebook: 分享到 Facebook
-    twitter: 分享到 Twitter
+    twitter: 分享到 X
   cannot_vote_for_self: 你不能给自己的帖子投票。
   modal_confirm:
     title: 发生错误...
+  delete_permanently:
+    title: 永久删除
+    content: 您确定要永久删除吗？
   account_result:
     success: 你的账号已通过验证，即将返回首页。
     link: 返回首页
@@ -1603,6 +1621,23 @@ ui:
       label: 数据库文件
       placeholder: /data/answer.db
       msg: 数据库文件不能为空。
+    ssl_enabled:
+      label: 使能够 SSL
+    ssl_enabled_on:
+      label: 开
+    ssl_enabled_off:
+      label: 关
+    ssl_mode:
+      label: SSL 模式
+    ssl_root_cert:
+      placeholder: sslrootcert 文件路径
+      msg: 文件路径不能为空
+    ssl_cert:
+      placeholder: sslcert 文件路径
+      msg: 文件路径不能为空
+    ssl_key:
+      placeholder: sslkey 文件路径
+      msg: 文件路径不能为空
     config_yaml:
       title: 创建 config.yaml
       label: 已创建 config.yaml 文件。
@@ -1635,8 +1670,8 @@ ui:
     admin_name:
       label: 名字
       msg: 名字不能为空。
-      character: '只能由 "a-z", "0-9", " - . _" 组成'
-      msg_max_length: 名字长度不能超过 30 个字符。
+      character: '只能由 "a-z"、"A-Z"、"0-9"、" - . _" 组成'
+      msg_max_length: 名称长度必须在 2 至 30 个字符之间。
     admin_password:
       label: 密码
       text: >-
@@ -1644,6 +1679,10 @@ ui:
       msg: 密码不能为空。
       msg_min_length: 密码必须至少 8 个字符长。
       msg_max_length: 密码长度不能超过 32 个字符。
+    admin_confirm_password:
+      label: "确认密码"
+      text: "请重新输入您的密码以确认。"
+      msg: "确认密码不一致。"
     admin_email:
       label: 邮箱
       text: 您需要此电子邮件才能登录。
@@ -1714,7 +1753,7 @@ ui:
       close: 关闭
       confirm: 查看徽章
     title: 徽章
-    awarded: 授予的
+    awarded: 授予
     earned_×: 以获得 ×{{ number }}
     ×_awarded: "{{ number }} 得到"
     can_earn_multiple: 你可以多次获得
@@ -1998,6 +2037,11 @@ ui:
       privacy_policy:
         label: 隐私政策
         text: "您可以在此添加隐私政策内容。如果您已经在别处托管了文档，请在这里提供完整的URL。"
+      external_content_display:
+        label: 外部内容
+        text: "内容包括外部网站嵌入的图片、视频和媒体。"
+        always_display: 始终显示外部内容
+        ask_before_display: 在显示外部内容前进行询问
     write:
       page_title: 编辑
       restrict_answer:
@@ -2067,7 +2111,7 @@ ui:
 
       footer:
         label: 页脚
-        text: 这将在 </body> 之前插入.
+        text: 这将在 &lt;/body> 之前插入。
       sidebar:
         label: 侧边栏
         text: 这将插入侧边栏中。
@@ -2253,5 +2297,11 @@ ui:
     user_deleted: 此用户已被删除
     badge_activated: 此徽章已被激活。
     badge_inactivated: 此徽章已被禁用。
+    users_deleted: 这些用户已被删除。
+    posts_deleted: 这些问题已被删除。
+    answers_deleted: 这些答案已被删除。
+    copy: 复制到剪贴板
+    copied: 已复制
+    external_content_warning: 外部图像/媒体未显示。
 
 

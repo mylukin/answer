@@ -48,6 +48,7 @@ import (
 	"github.com/apache/answer/internal/repo/comment"
 	"github.com/apache/answer/internal/repo/config"
 	"github.com/apache/answer/internal/repo/export"
+	"github.com/apache/answer/internal/repo/file_record"
 	"github.com/apache/answer/internal/repo/limit"
 	"github.com/apache/answer/internal/repo/meta"
 	notification2 "github.com/apache/answer/internal/repo/notification"
@@ -84,6 +85,7 @@ import (
 	"github.com/apache/answer/internal/service/dashboard"
 	"github.com/apache/answer/internal/service/event_queue"
 	export2 "github.com/apache/answer/internal/service/export"
+	file_record2 "github.com/apache/answer/internal/service/file_record"
 	"github.com/apache/answer/internal/service/follow"
 	"github.com/apache/answer/internal/service/importer"
 	meta2 "github.com/apache/answer/internal/service/meta"
@@ -228,7 +230,10 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	revisionController := controller.NewRevisionController(contentRevisionService, rankService)
 	rankController := controller.NewRankController(rankService)
 	userAdminRepo := user.NewUserAdminRepo(dataData, authRepo)
-	userAdminService := user_admin.NewUserAdminService(userAdminRepo, userRoleRelService, authService, userCommon, userActiveActivityRepo, siteInfoCommonService, emailService, questionRepo, answerRepo, commentCommonRepo, userExternalLoginRepo)
+	notificationRepo := notification2.NewNotificationRepo(dataData)
+	pluginUserConfigRepo := plugin_config.NewPluginUserConfigRepo(dataData)
+	badgeAwardRepo := badge_award.NewBadgeAwardRepo(dataData, uniqueIDRepo)
+	userAdminService := user_admin.NewUserAdminService(userAdminRepo, userRoleRelService, authService, userCommon, userActiveActivityRepo, siteInfoCommonService, emailService, questionRepo, answerRepo, commentCommonRepo, userExternalLoginRepo, notificationRepo, pluginUserConfigRepo, badgeAwardRepo)
 	userAdminController := controller_admin.NewUserAdminController(userAdminService)
 	reasonRepo := reason.NewReasonRepo(configService)
 	reasonService := reason2.NewReasonService(reasonRepo)
@@ -237,14 +242,15 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	siteInfoService := siteinfo.NewSiteInfoService(siteInfoRepo, siteInfoCommonService, emailService, tagCommonService, configService, questionCommon)
 	siteInfoController := controller_admin.NewSiteInfoController(siteInfoService)
 	controllerSiteInfoController := controller.NewSiteInfoController(siteInfoCommonService)
-	notificationRepo := notification2.NewNotificationRepo(dataData)
 	notificationCommon := notificationcommon.NewNotificationCommon(dataData, notificationRepo, userCommon, activityRepo, followRepo, objService, notificationQueueService, userExternalLoginRepo, siteInfoCommonService)
 	badgeRepo := badge.NewBadgeRepo(dataData, uniqueIDRepo)
 	notificationService := notification.NewNotificationService(dataData, notificationRepo, notificationCommon, revisionService, userRepo, reportRepo, reviewService, badgeRepo)
 	notificationController := controller.NewNotificationController(notificationService, rankService)
 	dashboardService := dashboard.NewDashboardService(questionRepo, answerRepo, commentCommonRepo, voteRepo, userRepo, reportRepo, configService, siteInfoCommonService, serviceConf, reviewService, revisionRepo, dataData)
 	dashboardController := controller.NewDashboardController(dashboardService)
-	uploaderService := uploader.NewUploaderService(serviceConf, siteInfoCommonService)
+	fileRecordRepo := file_record.NewFileRecordRepo(dataData)
+	fileRecordService := file_record2.NewFileRecordService(fileRecordRepo, revisionRepo, serviceConf, siteInfoCommonService)
+	uploaderService := uploader.NewUploaderService(serviceConf, siteInfoCommonService, fileRecordService)
 	uploadController := controller.NewUploadController(uploaderService)
 	activityActivityRepo := activity.NewActivityRepo(dataData, configService)
 	activityCommon := activity_common2.NewActivityCommon(activityRepo, activityQueueService)
@@ -253,7 +259,6 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	activityController := controller.NewActivityController(activityService)
 	roleController := controller_admin.NewRoleController(roleService)
 	pluginConfigRepo := plugin_config.NewPluginConfigRepo(dataData)
-	pluginUserConfigRepo := plugin_config.NewPluginUserConfigRepo(dataData)
 	importerService := importer.NewImporterService(questionService, rankService, userCommon)
 	pluginCommonService := plugin_common.NewPluginCommonService(pluginConfigRepo, pluginUserConfigRepo, configService, dataData, importerService)
 	pluginController := controller_admin.NewPluginController(pluginCommonService)
@@ -263,7 +268,6 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	metaService := meta2.NewMetaService(metaCommonService, userCommon, answerRepo, questionRepo, eventQueueService)
 	metaController := controller.NewMetaController(metaService)
 	badgeGroupRepo := badge_group.NewBadgeGroupRepo(dataData, uniqueIDRepo)
-	badgeAwardRepo := badge_award.NewBadgeAwardRepo(dataData, uniqueIDRepo)
 	eventRuleRepo := badge.NewEventRuleRepo(dataData)
 	badgeAwardService := badge2.NewBadgeAwardService(badgeAwardRepo, badgeRepo, userCommon, objService, notificationQueueService)
 	badgeEventService := badge2.NewBadgeEventService(dataData, eventQueueService, badgeRepo, eventRuleRepo, badgeAwardService)
@@ -287,7 +291,7 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	renderController := controller.NewRenderController()
 	pluginAPIRouter := router.NewPluginAPIRouter(connectorController, userCenterController, captchaController, embedController, renderController)
 	ginEngine := server.NewHTTPServer(debug, staticRouter, answerAPIRouter, swaggerRouter, uiRouter, authUserMiddleware, avatarMiddleware, shortIDMiddleware, templateRouter, pluginAPIRouter, uiConf)
-	scheduledTaskManager := cron.NewScheduledTaskManager(siteInfoCommonService, questionService)
+	scheduledTaskManager := cron.NewScheduledTaskManager(siteInfoCommonService, questionService, fileRecordService, serviceConf)
 	application := newApplication(serverConf, ginEngine, scheduledTaskManager)
 	return application, func() {
 		cleanup2()

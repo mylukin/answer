@@ -49,6 +49,9 @@ const Index: FC<Props> = ({
       {data?.status !== 'deleted' ? (
         <Link
           to={`/users/${data?.username}`}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
           className="d-flex align-items-center">
           {showAvatar && (
             <Avatar

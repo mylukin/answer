@@ -80,7 +80,10 @@ const TagIntroduction = () => {
     if (!fmt) {
       return;
     }
-    htmlRender(fmt);
+    htmlRender(fmt, {
+      copySuccessText: t('copied', { keyPrefix: 'messages' }),
+      copyText: t('copy', { keyPrefix: 'messages' }),
+    });
   }, [tagInfo?.parsed_text]);
 
   if (!tagInfo) {

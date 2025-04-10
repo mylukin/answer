@@ -295,8 +295,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/answer/admin/api/delete/permanently": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete permanently",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "delete permanently",
+                "parameters": [
+                    {
+                        "description": "DeletePermanentlyReq",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schema.DeletePermanentlyReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.RespBody"
+                        }
+                    }
+                }
+            }
+        },
         "/answer/admin/api/language/options": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "Get language options",
                 "produces": [
                     "application/json"
@@ -651,6 +695,11 @@ const docTemplate = `{
         },
         "/answer/admin/api/roles": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get role list",
                 "produces": [
                     "application/json"
@@ -2257,11 +2306,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/answer/page": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "AnswerList \u003cbr\u003e \u003cb\u003eorder\u003c/b\u003e (default or updated)",
                 "consumes": [
                     "application/json"
@@ -2354,11 +2398,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/badge": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get badge info",
                 "consumes": [
                     "application/json"
@@ -2404,11 +2443,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/badge/awards/page": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get badge award list",
                 "consumes": [
                     "application/json"
@@ -2471,11 +2505,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/badge/user/awards": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get user badge award list",
                 "consumes": [
                     "application/json"
@@ -2523,11 +2552,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/badge/user/awards/recent": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get user badge award list",
                 "consumes": [
                     "application/json"
@@ -2575,11 +2599,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/badges": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "list all badges group by group",
                 "consumes": [
                     "application/json"
@@ -3326,11 +3345,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/meta/reaction": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get reaction for an object",
                 "consumes": [
                     "application/json"
@@ -3895,11 +3909,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/personal/qa/top": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "UserTop",
                 "consumes": [
                     "application/json"
@@ -4118,11 +4127,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/plugin/status": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get all plugins status",
                 "consumes": [
                     "application/json"
@@ -4352,11 +4356,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/question/info": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get question details",
                 "consumes": [
                     "application/json"
@@ -4390,11 +4389,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/question/invite": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get question invite user info",
                 "consumes": [
                     "application/json"
@@ -5732,6 +5726,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update tag",
                 "consumes": [
                     "application/json"
@@ -5764,6 +5763,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "add tag",
                 "consumes": [
                     "application/json"
@@ -5796,6 +5800,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "delete tag",
                 "consumes": [
                     "application/json"
@@ -5830,6 +5839,11 @@ const docTemplate = `{
         },
         "/answer/api/v1/tag/recover": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "recover delete tag",
                 "consumes": [
                     "application/json"
@@ -5864,6 +5878,11 @@ const docTemplate = `{
         },
         "/answer/api/v1/tag/synonym": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update tag",
                 "consumes": [
                     "application/json"
@@ -6191,6 +6210,11 @@ const docTemplate = `{
         },
         "/answer/api/v1/user/email/change/code": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "send email to the user email then change their email",
                 "consumes": [
                     "application/json"
@@ -6271,6 +6295,9 @@ const docTemplate = `{
         "/answer/api/v1/user/email/verification/send": {
             "post": {
                 "security": [
+                    {
+                        "ApiKeyAuth": []
+                    },
                     {
                         "ApiKeyAuth": []
                     }
@@ -6539,6 +6566,11 @@ const docTemplate = `{
         },
         "/answer/api/v1/user/logout": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "user logout",
                 "consumes": [
                     "application/json"
@@ -6906,11 +6938,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/user/ranking": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get user ranking",
                 "consumes": [
                     "application/json"
@@ -6992,11 +7019,6 @@ const docTemplate = `{
         },
         "/answer/api/v1/user/staff": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "get user staff",
                 "consumes": [
                     "application/json"
@@ -7010,13 +7032,18 @@ const docTemplate = `{
                 "summary": "get user staff",
                 "parameters": [
                     {
-                        "description": "GetUserStaffReq",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/schema.GetUserStaffReq"
-                        }
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "page_size",
+                        "name": "page_size",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -7562,6 +7589,21 @@ const docTemplate = `{
                 },
                 "db_username": {
                     "type": "string"
+                },
+                "ssl_cert": {
+                    "type": "string"
+                },
+                "ssl_enabled": {
+                    "type": "boolean"
+                },
+                "ssl_key": {
+                    "type": "string"
+                },
+                "ssl_mode": {
+                    "type": "string"
+                },
+                "ssl_root_cert": {
+                    "type": "string"
                 }
             }
         },
@@ -7570,6 +7612,7 @@ const docTemplate = `{
             "required": [
                 "contact_email",
                 "email",
+                "external_content_display",
                 "lang",
                 "name",
                 "password",
@@ -7585,6 +7628,13 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 500
                 },
+                "external_content_display": {
+                    "type": "string",
+                    "enum": [
+                        "always_display",
+                        "ask_before_display"
+                    ]
+                },
                 "lang": {
                     "type": "string",
                     "maxLength": 30
@@ -7594,7 +7644,8 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string",
-                    "maxLength": 30
+                    "maxLength": 30,
+                    "minLength": 2
                 },
                 "password": {
                     "type": "string",
@@ -8155,6 +8206,22 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.DeletePermanentlyReq": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "users",
+                        "questions",
+                        "answers"
+                    ]
                 }
             }
         },
@@ -9367,19 +9434,6 @@ const docTemplate = `{
                 }
             }
         },
-        "schema.GetUserStaffReq": {
-            "type": "object",
-            "properties": {
-                "page_size": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "username": {
-                    "type": "string",
-                    "maxLength": 500
-                }
-            }
-        },
         "schema.GetUserStaffResp": {
             "type": "object",
             "properties": {
@@ -9766,6 +9820,9 @@ const docTemplate = `{
         "schema.QuestionPageRespOperator": {
             "type": "object",
             "properties": {
+                "avatar": {
+                    "type": "string"
+                },
                 "display_name": {
                     "type": "string"
                 },
@@ -10363,6 +10420,9 @@ const docTemplate = `{
                 "revision": {
                     "type": "string"
                 },
+                "site_legal": {
+                    "$ref": "#/definitions/schema.SiteLegalSimpleResp"
+                },
                 "site_seo": {
                     "$ref": "#/definitions/schema.SiteSeoResp"
                 },
@@ -10416,7 +10476,17 @@ const docTemplate = `{
         },
         "schema.SiteLegalReq": {
             "type": "object",
+            "required": [
+                "external_content_display"
+            ],
             "properties": {
+                "external_content_display": {
+                    "type": "string",
+                    "enum": [
+                        "always_display",
+                        "ask_before_display"
+                    ]
+                },
                 "privacy_policy_original_text": {
                     "type": "string"
                 },
@@ -10433,7 +10503,17 @@ const docTemplate = `{
         },
         "schema.SiteLegalResp": {
             "type": "object",
+            "required": [
+                "external_content_display"
+            ],
             "properties": {
+                "external_content_display": {
+                    "type": "string",
+                    "enum": [
+                        "always_display",
+                        "ask_before_display"
+                    ]
+                },
                 "privacy_policy_original_text": {
                     "type": "string"
                 },
@@ -10445,6 +10525,21 @@ const docTemplate = `{
                 },
                 "terms_of_service_parsed_text": {
                     "type": "string"
+                }
+            }
+        },
+        "schema.SiteLegalSimpleResp": {
+            "type": "object",
+            "required": [
+                "external_content_display"
+            ],
+            "properties": {
+                "external_content_display": {
+                    "type": "string",
+                    "enum": [
+                        "always_display",
+                        "ask_before_display"
+                    ]
                 }
             }
         },

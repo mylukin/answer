@@ -419,6 +419,7 @@ export interface SiteSettings {
   site_write: AdminSettingsWrite;
   version: string;
   revision: string;
+  site_legal: AdminSettingsLegal;
 }
 
 export interface AdminSettingBranding {
@@ -429,6 +430,7 @@ export interface AdminSettingBranding {
 }
 
 export interface AdminSettingsLegal {
+  external_content_display: string;
   privacy_policy_original_text?: string;
   privacy_policy_parsed_text?: string;
   terms_of_service_original_text?: string;

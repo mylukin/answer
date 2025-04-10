@@ -1398,6 +1398,8 @@ func (qs *QuestionService) GetQuestionPage(ctx context.Context, req *schema.Ques
 				return nil, 0, err
 			}
 			tagIDs = append(synTagIds, tagInfo.ID)
+		} else {
+			return questions, 0, nil
 		}
 	}
 
@@ -1445,7 +1447,7 @@ func (qs *QuestionService) GetRecommendQuestionPage(ctx context.Context, req *sc
 	if err != nil {
 		return nil, 0, err
 	}
-	activities, err := qs.activityRepo.GetUserActivitysByActivityType(ctx, req.LoginUserID, activityType)
+	activities, err := qs.activityRepo.GetUserActivitiesByActivityType(ctx, req.LoginUserID, activityType)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -1462,7 +1464,7 @@ func (qs *QuestionService) GetRecommendQuestionPage(ctx context.Context, req *sc
 		return nil, 0, err
 	}
 
-	questions, err = qs.questioncommon.FormatQuestionsPage(ctx, questionList, req.LoginUserID, "frequent")
+	questions, err = qs.questioncommon.FormatQuestionsPage(ctx, questionList, req.LoginUserID, schema.QuestionOrderCondFrequent)
 	if err != nil {
 		return nil, 0, err
 	}

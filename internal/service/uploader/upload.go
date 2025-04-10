@@ -31,6 +31,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/apache/answer/internal/service/file_record"
+
 	"github.com/apache/answer/internal/base/constant"
 	"github.com/apache/answer/internal/base/reason"
 	"github.com/apache/answer/internal/service/service_config"
@@ -53,6 +55,7 @@ var (
 		constant.PostSubPath,
 		constant.BrandingSubPath,
 		constant.FilesPostSubPath,
+		constant.DeletedSubPath,
 	}
 	supportedThumbFileExtMapping = map[string]imaging.Format{
 		".jpg":  imaging.JPEG,
@@ -63,22 +66,26 @@ var (
 )
 
 type UploaderService interface {
-	UploadAvatarFile(ctx *gin.Context) (url string, err error)
-	UploadPostFile(ctx *gin.Context) (url string, err error)
-	UploadPostAttachment(ctx *gin.Context) (url string, err error)
-	UploadBrandingFile(ctx *gin.Context) (url string, err error)
+	UploadAvatarFile(ctx *gin.Context, userID string) (url string, err error)
+	UploadPostFile(ctx *gin.Context, userID string) (url string, err error)
+	UploadPostAttachment(ctx *gin.Context, userID string) (url string, err error)
+	UploadBrandingFile(ctx *gin.Context, userID string) (url string, err error)
 	AvatarThumbFile(ctx *gin.Context, fileName string, size int) (url string, err error)
 }
 
 // uploaderService uploader service
 type uploaderService struct {
-	serviceConfig   *service_config.ServiceConfig
-	siteInfoService siteinfo_common.SiteInfoCommonService
+	serviceConfig     *service_config.ServiceConfig
+	siteInfoService   siteinfo_common.SiteInfoCommonService
+	fileRecordService *file_record.FileRecordService
 }
 
 // NewUploaderService new upload service
-func NewUploaderService(serviceConfig *service_config.ServiceConfig,
-	siteInfoService siteinfo_common.SiteInfoCommonService) UploaderService {
+func NewUploaderService(
+	serviceConfig *service_config.ServiceConfig,
+	siteInfoService siteinfo_common.SiteInfoCommonService,
+	fileRecordService *file_record.FileRecordService,
+) UploaderService {
 	for _, subPath := range subPathList {
 		err := dir.CreateDirIfNotExist(filepath.Join(serviceConfig.UploadPath, subPath))
 		if err != nil {
@@ -86,13 +93,14 @@ func NewUploaderService(serviceConfig *service_config.ServiceConfig,
 		}
 	}
 	return &uploaderService{
-		serviceConfig:   serviceConfig,
-		siteInfoService: siteInfoService,
+		serviceConfig:     serviceConfig,
+		siteInfoService:   siteInfoService,
+		fileRecordService: fileRecordService,
 	}
 }
 
 // UploadAvatarFile upload avatar file
-func (us *uploaderService) UploadAvatarFile(ctx *gin.Context) (url string, err error) {
+func (us *uploaderService) UploadAvatarFile(ctx *gin.Context, userID string) (url string, err error) {
 	url, err = us.tryToUploadByPlugin(ctx, plugin.UserAvatar)
 	if err != nil {
 		return "", err
@@ -174,7 +182,7 @@ func (us *uploaderService) AvatarThumbFile(ctx *gin.Context, fileName string, si
 	return saveFilePath, nil
 }
 
-func (us *uploaderService) UploadPostFile(ctx *gin.Context) (
+func (us *uploaderService) UploadPostFile(ctx *gin.Context, userID string) (
 	url string, err error) {
 	url, err = us.tryToUploadByPlugin(ctx, plugin.UserPost)
 	if err != nil {
@@ -202,10 +210,15 @@ func (us *uploaderService) UploadPostFile(ctx *gin.Context) (
 	fileExt := strings.ToLower(path.Ext(fileHeader.Filename))
 	newFilename := fmt.Sprintf("%s%s", uid.IDStr12(), fileExt)
 	avatarFilePath := path.Join(constant.PostSubPath, newFilename)
-	return us.uploadImageFile(ctx, fileHeader, avatarFilePath)
+	url, err = us.uploadImageFile(ctx, fileHeader, avatarFilePath)
+	if err != nil {
+		return "", err
+	}
+	us.fileRecordService.AddFileRecord(ctx, userID, avatarFilePath, url, string(plugin.UserPost))
+	return url, nil
 }
 
-func (us *uploaderService) UploadPostAttachment(ctx *gin.Context) (
+func (us *uploaderService) UploadPostAttachment(ctx *gin.Context, userID string) (
 	url string, err error) {
 	url, err = us.tryToUploadByPlugin(ctx, plugin.UserPostAttachment)
 	if err != nil {
@@ -232,11 +245,16 @@ func (us *uploaderService) UploadPostAttachment(ctx *gin.Context) (
 
 	fileExt := strings.ToLower(path.Ext(fileHeader.Filename))
 	newFilename := fmt.Sprintf("%s%s", uid.IDStr12(), fileExt)
-	avatarFilePath := path.Join(constant.FilesPostSubPath, newFilename)
-	return us.uploadAttachmentFile(ctx, fileHeader, fileHeader.Filename, avatarFilePath)
+	attachmentFilePath := path.Join(constant.FilesPostSubPath, newFilename)
+	url, err = us.uploadAttachmentFile(ctx, fileHeader, fileHeader.Filename, attachmentFilePath)
+	if err != nil {
+		return "", err
+	}
+	us.fileRecordService.AddFileRecord(ctx, userID, attachmentFilePath, url, string(plugin.UserPostAttachment))
+	return url, nil
 }
 
-func (us *uploaderService) UploadBrandingFile(ctx *gin.Context) (
+func (us *uploaderService) UploadBrandingFile(ctx *gin.Context, userID string) (
 	url string, err error) {
 	url, err = us.tryToUploadByPlugin(ctx, plugin.AdminBranding)
 	if err != nil {

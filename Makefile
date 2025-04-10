@@ -1,6 +1,6 @@
 .PHONY: build clean ui
 
-VERSION=1.4.2
+VERSION=1.4.5
 BIN=answer
 DIR_SRC=./cmd/answer
 DOCKER_CMD=docker
@@ -45,7 +45,7 @@ clean:
 
 install-ui-packages:
 	@corepack enable
-	@corepack prepare pnpm@8.9.2 --activate
+	@corepack prepare pnpm@9.7.0 --activate
 
 ui:
 	@cd ui && pnpm pre-install && pnpm build && cd -

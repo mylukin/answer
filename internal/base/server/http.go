@@ -62,30 +62,30 @@ func NewHTTPServer(debug bool,
 
 	rootGroup := r.Group("")
 	swaggerRouter.Register(rootGroup)
-	static := r.Group("")
+	static := r.Group(uiConf.APIBaseURL)
 	static.Use(avatarMiddleware.AvatarThumb(), authUserMiddleware.VisitAuth())
 	staticRouter.RegisterStaticRouter(static)
 
 	// The route must be available without logging in
-	mustUnAuthV1 := r.Group("/answer/api/v1")
+	mustUnAuthV1 := r.Group(uiConf.APIBaseURL + "/answer/api/v1")
 	answerRouter.RegisterMustUnAuthAnswerAPIRouter(authUserMiddleware, mustUnAuthV1)
 
 	// register api that no need to login
-	unAuthV1 := r.Group("/answer/api/v1")
+	unAuthV1 := r.Group(uiConf.APIBaseURL + "/answer/api/v1")
 	unAuthV1.Use(authUserMiddleware.Auth(), authUserMiddleware.EjectUserBySiteInfo())
 	answerRouter.RegisterUnAuthAnswerAPIRouter(unAuthV1)
 
 	// register api that must be authenticated but no need to check account status
-	authWithoutStatusV1 := r.Group("/answer/api/v1")
+	authWithoutStatusV1 := r.Group(uiConf.APIBaseURL + "/answer/api/v1")
 	authWithoutStatusV1.Use(authUserMiddleware.MustAuthWithoutAccountAvailable())
 	answerRouter.RegisterAuthUserWithAnyStatusAnswerAPIRouter(authWithoutStatusV1)
 
 	// register api that must be authenticated
-	authV1 := r.Group("/answer/api/v1")
+	authV1 := r.Group(uiConf.APIBaseURL + "/answer/api/v1")
 	authV1.Use(authUserMiddleware.MustAuthAndAccountAvailable())
 	answerRouter.RegisterAnswerAPIRouter(authV1)
 
-	adminauthV1 := r.Group("/answer/admin/api")
+	adminauthV1 := r.Group(uiConf.APIBaseURL + "/answer/admin/api")
 	adminauthV1.Use(authUserMiddleware.AdminAuth())
 	answerRouter.RegisterAnswerAdminAPIRouter(adminauthV1)
 

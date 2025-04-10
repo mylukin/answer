@@ -23,8 +23,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/apache/answer/internal/base/constant"
 	"time"
+
+	"github.com/apache/answer/internal/base/constant"
 
 	"github.com/apache/answer/internal/base/data"
 	"github.com/apache/answer/internal/repo/unique"
@@ -49,14 +50,15 @@ func NewMentor(ctx context.Context, engine *xorm.Engine, data *InitNeedUserInput
 }
 
 type InitNeedUserInputData struct {
-	Language      string
-	SiteName      string
-	SiteURL       string
-	ContactEmail  string
-	AdminName     string
-	AdminPassword string
-	AdminEmail    string
-	LoginRequired bool
+	Language               string
+	SiteName               string
+	SiteURL                string
+	ContactEmail           string
+	AdminName              string
+	AdminPassword          string
+	AdminEmail             string
+	LoginRequired          bool
+	ExternalContentDisplay string
 }
 
 func (m *Mentor) InitDB() error {
@@ -78,6 +80,7 @@ func (m *Mentor) InitDB() error {
 	m.do("init site info user config", m.initSiteInfoUsersConfig)
 	m.do("init site info privilege rank", m.initSiteInfoPrivilegeRank)
 	m.do("init site info write", m.initSiteInfoWrite)
+	m.do("init site info legal", m.initSiteInfoLegalConfig)
 	m.do("init default content", m.initDefaultContent)
 	m.do("init default badges", m.initDefaultBadges)
 	return m.err
@@ -184,7 +187,7 @@ func (m *Mentor) initSiteInfoGeneralData() {
 }
 
 func (m *Mentor) initSiteInfoLoginConfig() {
-	loginConfig := map[string]bool{
+	loginConfig := map[string]interface{}{
 		"allow_new_registrations":   true,
 		"allow_email_registrations": true,
 		"allow_password_login":      true,
@@ -194,6 +197,18 @@ func (m *Mentor) initSiteInfoLoginConfig() {
 	_, m.err = m.engine.Context(m.ctx).Insert(&entity.SiteInfo{
 		Type:    "login",
 		Content: string(loginConfigDataBytes),
+		Status:  1,
+	})
+}
+
+func (m *Mentor) initSiteInfoLegalConfig() {
+	legalConfig := map[string]interface{}{
+		"external_content_display": m.userData.ExternalContentDisplay,
+	}
+	legalConfigDataBytes, _ := json.Marshal(legalConfig)
+	_, m.err = m.engine.Context(m.ctx).Insert(&entity.SiteInfo{
+		Type:    "legal",
+		Content: string(legalConfigDataBytes),
 		Status:  1,
 	})
 }
@@ -253,11 +268,15 @@ func (m *Mentor) initSiteInfoPrivilegeRank() {
 
 func (m *Mentor) initSiteInfoWrite() {
 	writeData := map[string]interface{}{
-		"restrict_answer":       true,
-		"max_image_size":        4,
-		"max_attachment_size":   8,
-		"max_image_megapixel":   40,
-		"authorized_extensions": []string{"jpg", "jpeg", "png", "gif", "webp"},
+		"restrict_answer":                  true,
+		"required_tag":                     false,
+		"recommend_tags":                   []string{},
+		"reserved_tags":                    []string{},
+		"max_image_size":                   4,
+		"max_attachment_size":              8,
+		"max_image_megapixel":              40,
+		"authorized_image_extensions":      []string{"jpg", "jpeg", "png", "gif", "webp"},
+		"authorized_attachment_extensions": []string{},
 	}
 	writeDataBytes, _ := json.Marshal(writeData)
 	_, m.err = m.engine.Context(m.ctx).Insert(&entity.SiteInfo{

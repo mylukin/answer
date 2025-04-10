@@ -22,17 +22,18 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/apache/answer/internal/base/middleware"
-	"github.com/apache/answer/internal/base/pager"
-	"github.com/apache/answer/internal/service/content"
-	"github.com/apache/answer/internal/service/event_queue"
-	"github.com/apache/answer/plugin"
 	"html/template"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/apache/answer/internal/base/middleware"
+	"github.com/apache/answer/internal/base/pager"
+	"github.com/apache/answer/internal/service/content"
+	"github.com/apache/answer/internal/service/event_queue"
+	"github.com/apache/answer/plugin"
 
 	"github.com/apache/answer/internal/base/constant"
 	"github.com/apache/answer/internal/base/handler"

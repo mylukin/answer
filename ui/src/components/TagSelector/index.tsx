@@ -233,7 +233,8 @@ const TagSelector: FC<IProps> = ({
     e.stopPropagation();
     const { keyCode } = e;
     if (keyCode === 9) {
-      handleTagSelectorBlur();
+      console.log('tab====9');
+      // handleTagSelectorBlur();
       return;
     }
     if (value.length > 0 && keyCode === 8 && !searchValue) {
@@ -369,13 +370,12 @@ const TagSelector: FC<IProps> = ({
   return (
     <div ref={containerRef} className="position-relative">
       <div
-        tabIndex={0}
         className={classNames(
           'tag-selector-wrap form-control position-relative p-0',
           focusState ? 'tag-selector-wrap--focus' : '',
           isInvalid ? 'is-invalid' : '',
         )}
-        onFocus={handleTagSelectorFocus}
+        onClick={handleTagSelectorFocus}
         onKeyDown={handleKeyDown}>
         <div onClick={handleClickToggle}>
           <div
@@ -414,6 +414,7 @@ const TagSelector: FC<IProps> = ({
                 placeholder={t('add_btn')}
                 value={searchValue}
                 onChange={handleSearch}
+                onFocus={handleTagSelectorFocus}
               />
             ) : (
               <Form.Control

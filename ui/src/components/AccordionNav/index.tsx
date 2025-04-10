@@ -38,6 +38,7 @@ function MenuNode({
   const { t } = useTranslation('translation', { keyPrefix: 'nav_menus' });
   const isLeaf = !menu.children.length;
   const href = isLeaf ? `${path}${menu.path}` : '#';
+
   return (
     <Nav.Item key={menu.path} className="w-100">
       {isLeaf ? (

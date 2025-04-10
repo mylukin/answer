@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"net/mail"
 	"net/url"
+	"path/filepath"
 	"strings"
 
 	"github.com/apache/answer/internal/base/constant"
@@ -117,6 +118,7 @@ type SiteLegalReq struct {
 	TermsOfServiceParsedText   string `json:"terms_of_service_parsed_text"`
 	PrivacyPolicyOriginalText  string `json:"privacy_policy_original_text"`
 	PrivacyPolicyParsedText    string `json:"privacy_policy_parsed_text"`
+	ExternalContentDisplay     string `validate:"required,oneof=always_display ask_before_display" json:"external_content_display"`
 }
 
 // GetSiteLegalInfoReq site site legal request
@@ -236,6 +238,11 @@ type SiteWriteResp SiteWriteReq
 // SiteLegalResp site write response
 type SiteLegalResp SiteLegalReq
 
+// SiteLegalSimpleResp site write response
+type SiteLegalSimpleResp struct {
+	ExternalContentDisplay string `validate:"required,oneof=always_display ask_before_display" json:"external_content_display"`
+}
+
 // SiteSeoResp site write response
 type SiteSeoResp SiteSeoReq
 
@@ -250,6 +257,7 @@ type SiteInfoResp struct {
 	SiteSeo       *SiteSeoResp           `json:"site_seo"`
 	SiteUsers     *SiteUsersResp         `json:"site_users"`
 	Write         *SiteWriteResp         `json:"site_write"`
+	Legal         *SiteLegalSimpleResp   `json:"site_legal"`
 	Version       string                 `json:"version"`
 	Revision      string                 `json:"revision"`
 }
@@ -305,16 +313,54 @@ type GetSMTPConfigResp struct {
 
 // GetManifestJsonResp get manifest json response
 type GetManifestJsonResp struct {
-	ManifestVersion int               `json:"manifest_version"`
-	Version         string            `json:"version"`
-	Revision        string            `json:"revision"`
-	ShortName       string            `json:"short_name"`
-	Name            string            `json:"name"`
-	Icons           map[string]string `json:"icons"`
-	StartUrl        string            `json:"start_url"`
-	Display         string            `json:"display"`
-	ThemeColor      string            `json:"theme_color"`
-	BackgroundColor string            `json:"background_color"`
+	ManifestVersion int                `json:"manifest_version"`
+	Version         string             `json:"version"`
+	Revision        string             `json:"revision"`
+	ShortName       string             `json:"short_name"`
+	Name            string             `json:"name"`
+	Icons           []ManifestJsonIcon `json:"icons"`
+	StartUrl        string             `json:"start_url"`
+	Display         string             `json:"display"`
+	ThemeColor      string             `json:"theme_color"`
+	BackgroundColor string             `json:"background_color"`
+}
+
+type ManifestJsonIcon struct {
+	Src   string `json:"src"`
+	Sizes string `json:"sizes"`
+	Type  string `json:"type"`
+}
+
+func CreateManifestJsonIcons(icon string) []ManifestJsonIcon {
+	ext := filepath.Ext(icon)
+	if ext == "" {
+		ext = "png"
+	} else {
+		ext = strings.ToLower(ext[1:])
+	}
+	iconType := fmt.Sprintf("image/%s", ext)
+	return []ManifestJsonIcon{
+		{
+			Src:   icon,
+			Sizes: "16x16",
+			Type:  iconType,
+		},
+		{
+			Src:   icon,
+			Sizes: "32x32",
+			Type:  iconType,
+		},
+		{
+			Src:   icon,
+			Sizes: "48x48",
+			Type:  iconType,
+		},
+		{
+			Src:   icon,
+			Sizes: "128x128",
+			Type:  iconType,
+		},
+	}
 }
 
 const (

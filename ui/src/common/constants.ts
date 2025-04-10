@@ -30,6 +30,8 @@ export const DRAFT_TIMESIGH_STORAGE_KEY = '|_a_t_s_|';
 export const DEFAULT_THEME = 'system';
 export const ADMIN_PRIVILEGE_CUSTOM_LEVEL = 99;
 export const SKELETON_SHOW_TIME = 1000;
+export const LIST_VIEW_STORAGE_KEY = '_a_list_view_';
+export const EXTERNAL_CONTENT_DISPLAY_MODE = '_a_ecd_';
 
 export const USER_AGENT_NAMES = {
   SegmentFault: 'SegmentFault',

@@ -36,6 +36,7 @@ import (
 	"github.com/apache/answer/internal/service/dashboard"
 	"github.com/apache/answer/internal/service/event_queue"
 	"github.com/apache/answer/internal/service/export"
+	"github.com/apache/answer/internal/service/file_record"
 	"github.com/apache/answer/internal/service/follow"
 	"github.com/apache/answer/internal/service/importer"
 	"github.com/apache/answer/internal/service/meta"
@@ -126,4 +127,5 @@ var ProviderSetService = wire.NewSet(
 	badge.NewBadgeAwardService,
 	badge.NewBadgeGroupService,
 	importer.NewImporterService,
+	file_record.NewFileRecordService,
 )
