@@ -15,15 +15,53 @@
 # specific language governing permissions and limitations
 # under the License.
 
-version: "3"
 services:
-  answer:
-    image: apache/answer
+  db:
+    image: mariadb:10.5
+    restart: always
     ports:
-      - '9080:80'
-    restart: on-failure
+      - "3306:3306" # 宿主机访问用的端口映射
+    env_file:
+      - .env
     volumes:
-      - answer-data:/data
+      - ./data/mariadb:/var/lib/mysql
+    networks:
+      - answer_network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
-volumes:
-  answer-data:
+  answer:
+    image: ghcr.io/easymetaau/answer:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "6081:80"
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./data/answer:/data
+    networks:
+      - answer_network
+
+networks:
+  answer_network:
+    driver: bridge
